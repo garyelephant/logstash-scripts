@@ -21,7 +21,8 @@
 
 . /etc/rc.d/init.d/functions
 
-PATH=/bin:/usr/bin:/sbin:/usr/sbin
+# rember to include your JAVA bin PATH
+PATH=/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/jdk/bin/
 NAME=logstash
 DESC="Logstash Daemon"
 DEFAULT=/etc/sysconfig/$NAME
