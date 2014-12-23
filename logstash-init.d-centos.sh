@@ -54,7 +54,8 @@ OPEN_FILES=20480
 NICE=19
 
 # Filter threads(higer number means higer load)
-FILTER_THREADS=6
+# nproc: the number of processing units available
+FILTER_THREADS=`nproc`
 
 # End of variables that can be overwritten in $DEFAULT
 
