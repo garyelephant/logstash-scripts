@@ -52,7 +52,7 @@ NICE=19
 
 # Filter threads(higer number means higer load)
 # nproc: the number of processing units available
-FILTER_THREADS=`nproc`
+FILTER_THREADS=1
 
 # End of variables that can be overwritten in $DEFAULT
 
@@ -141,20 +141,20 @@ do_status()
 
 case "$1" in
     start)
-        echo -n "Starting $DESC: "
+        echo "Starting $DESC: "
         do_start
         ;;
     stop)
-        echo -n "Stopping $DESC: "
+        echo "Stopping $DESC: "
         do_stop
         ;;
     restart|reload)
-        echo -n "Restarting $DESC: "
+        echo "Restarting $DESC: "
         do_stop
         do_start
         ;;
     status)
-        echo -n "$DESC"
+        echo "$DESC"
         do_status
         exit $?
         ;;
