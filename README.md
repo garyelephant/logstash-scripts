@@ -5,6 +5,6 @@ scripts that makes logstash amazing
 
 ## Contents
 *   centos init scripts
-    *   [logstash](blob/master/centos-init-scripts/logstash)
-    *   [logstash-multi](blob/master/centos-init-scripts/logstash-multi)
+    *   [logstash](centos-init-scripts/logstash)
+    *   [logstash-multi](centos-init-scripts/logstash-multi)
 
