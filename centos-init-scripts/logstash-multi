@@ -64,7 +64,8 @@ fi
 PID_FILE=/var/run/$NAME.pid
 
 JAVA=`which java`
-#TODO ARGS="agent --config ${CONF_DIR} --log ${LOG_FILE} -w ${FILTER_THREADS}"
+
+CONFS=$(dir ${CONF_DIR})
 
 START=true # this should be configured in the file of $DEFAULT
 
@@ -74,6 +75,14 @@ is_true() {
     else
         return 1
     fi
+}
+
+#
+# $1: config name
+#
+get_pid_file()
+{
+    echo ${PID_FILE}"."$1
 }
 
 #
@@ -92,14 +101,18 @@ do_start()
         exit 1
     fi
 
-    if pidofproc -p "$PID_FILE" >/dev/null; then
-        failure
-        exit 99
-    fi
+    for conf in ${CONFS}
+    do
+        pid_file=$(get_pid_file ${conf})
+        if pidofproc -p "$pid_file" >/dev/null; then
+            failure
+            exit 99
+        fi
+    done
 
     ulimit -n $OPEN_FILES
 
-    for conf in $(dir ${CONF_DIR})
+    for conf in ${CONFS}
     do
         logname=$(basename $conf "conf")"log" # TODO conf suffix
         ARGS="agent --config ${CONF_DIR}"/"${conf} --log ${LOG_DIR}"/"${logname} -w ${FILTER_THREADS}"
@@ -107,7 +120,7 @@ do_start()
 
         RETVAL=$?
         local PID=`pgrep -f "${ARGS}"`
-        pid_file=${PID_FILE}"."${conf}
+        pid_file=$(get_pid_file ${conf})
         echo $PID > ${pid_file}
     done
 
@@ -119,9 +132,10 @@ do_start()
 #
 do_stop()
 {
-    for conf in $(dir ${CONF_DIR})
+    for conf in ${CONFS}
     do
-        pid_file=${PID_FILE}"."${conf}
+        pid_file=$(get_pid_file ${conf})
+        echo -n $conf
         killproc -p ${pid_file}
         RETVAL=$?
         echo
@@ -131,9 +145,10 @@ do_stop()
 
 do_status()
 {
-    for conf in $(dir ${CONF_DIR})
+    for conf in ${CONFS}
     do
-        pid_file=${PID_FILE}"."${conf}
+        pid_file=$(get_pid_file ${conf})
+        echo -n ${conf}
         status -p ${pid_file}
     done
     return $?
@@ -154,7 +169,7 @@ case "$1" in
         do_start
         ;;
     status)
-        echo "$DESC"
+        echo "$DESC Status:"
         do_status
         exit $?
         ;;
